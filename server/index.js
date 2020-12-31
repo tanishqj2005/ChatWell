@@ -24,7 +24,13 @@ require("./models/Message");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//Setup cors:
+app.use(require("cors")());
+
 //Bring in the routes:
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 app.use("/user", require("./routes/user"));
 app.use("/chatroom", require("./routes/chatroom"));
 
