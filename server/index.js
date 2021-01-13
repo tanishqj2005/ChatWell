@@ -78,18 +78,24 @@ io.on("connection", (socket) => {
     console.log("A user left Chatroom: " + chatroomId);
   });
 
-  socket.on("chatroomMessage", async ({ chatroomId, message }) => {
-    if (message.trim().length > 0) {
+  socket.on("chatroomMessage", async ({ chatroomId, message, image }) => {
+    console.log("Recieving Emit :)");
+    if (message.trim().length >= 0) {
       const user = await User.findOne({ _id: socket.userId });
       const newMessage = new Message({
         chatroom: chatroomId,
         user: socket.userId,
+        image,
         message,
       });
+      if (image != "") {
+        console.log("Image Recieved Successfully!");
+      }
       io.to(chatroomId).emit("newMessage", {
         message,
         name: user.name,
         userId: socket.userId,
+        image,
       });
       await newMessage.save();
     }

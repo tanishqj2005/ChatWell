@@ -16,6 +16,11 @@ const messageSchema = new mongoose.Schema(
       type: String,
       required: "Message is required!",
     },
+    image: {
+      data: Buffer,
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
