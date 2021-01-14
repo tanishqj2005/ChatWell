@@ -79,7 +79,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("chatroomMessage", async ({ chatroomId, message, image }) => {
-    console.log("Recieving Emit :)");
     if (message.trim().length >= 0) {
       const user = await User.findOne({ _id: socket.userId });
       const newMessage = new Message({
@@ -88,9 +87,6 @@ io.on("connection", (socket) => {
         image,
         message,
       });
-      if (image != "") {
-        console.log("Image Recieved Successfully!");
-      }
       io.to(chatroomId).emit("newMessage", {
         message,
         name: user.name,
