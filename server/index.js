@@ -50,6 +50,7 @@ const server = app.listen(8000, () => {
 
 const io = require("socket.io")(server);
 const jwt = require("jwt-then");
+const Chatroom = require("./models/Chatroom");
 
 const Message = mongoose.model("Message");
 const User = mongoose.model("User");
@@ -95,5 +96,11 @@ io.on("connection", (socket) => {
       });
       await newMessage.save();
     }
+  });
+  socket.on("ChatGroupCreated", async ({ chatroomName }) => {
+    const chatRoom = await Chatroom.findOne({ name: chatroomName });
+    io.emit("newChatGroup", {
+      chatRoom,
+    });
   });
 });
