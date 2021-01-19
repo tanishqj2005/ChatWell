@@ -54,6 +54,7 @@ const Chatroom = require("./models/Chatroom");
 
 const Message = mongoose.model("Message");
 const User = mongoose.model("User");
+const ChatroomModel = mongoose.model("Chatroom");
 
 io.use(async (socket, next) => {
   try {
@@ -101,6 +102,13 @@ io.on("connection", (socket) => {
     const chatRoom = await Chatroom.findOne({ name: chatroomName });
     io.emit("newChatGroup", {
       chatRoom,
+    });
+  });
+  socket.on("deletingChatGroup", async ({ chatroomId }) => {
+    await ChatroomModel.deleteOne({ _id: chatroomId });
+    await Message.deleteMany({ chatroom: chatroomId });
+    io.emit("chatGroupDeleted", {
+      chatroomId,
     });
   });
 });
