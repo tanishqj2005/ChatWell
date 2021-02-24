@@ -90,6 +90,7 @@ io.on("connection", (socket) => {
         message,
       });
       io.to(chatroomId).emit("newMessage", {
+        id: newMessage._id,
         message,
         name: user.name,
         userId: socket.userId,
@@ -109,6 +110,12 @@ io.on("connection", (socket) => {
     await Message.deleteMany({ chatroom: chatroomId });
     io.emit("chatGroupDeleted", {
       chatroomId,
+    });
+  });
+  socket.on("deletingChat", async ({ chatId }) => {
+    await Message.deleteOne({ _id: chatId });
+    io.emit("chatDeleted", {
+      chatId,
     });
   });
 });
